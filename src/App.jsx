@@ -67,7 +67,7 @@ export default function App() {
             background: 'linear-gradient(135deg, var(--accent-orange), var(--accent-purple))',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
-          }}>Gestor de</span> Suscripciones
+          }}>Suscrip</span>ciónes
         </h1>
         <div className="text-muted" style={{ marginBottom: '32px', fontSize: '0.9rem' }}>
           Gestión inteligente de suscripciones y ahorro.
