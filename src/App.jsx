@@ -81,17 +81,14 @@ export default function App() {
       <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
         <div className="sidebar-header">
            <h1 className="title" style={{ 
-               color: 'var(--text-main)', 
+               color: 'var(--accent-orange)', 
                display: 'flex', 
                alignItems: 'center', 
-               gap: '8px'
+               gap: '8px',
+               fontSize: '1.2rem',
+               letterSpacing: '0.5px'
              }}>
-             <span style={{ 
-               background: 'linear-gradient(135deg, var(--accent-orange), var(--accent-purple))',
-               WebkitBackgroundClip: 'text',
-               WebkitTextFillColor: 'transparent',
-               letterSpacing: '1px'
-             }}>Mis</span>Suscripciones
+             Mis Suscripciones
            </h1>
            <div className="text-muted" style={{ marginBottom: '32px', fontSize: '0.85rem', letterSpacing: '0.5px' }}>
              Control inteligente de gastos recurrentes.
