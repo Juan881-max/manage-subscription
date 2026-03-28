@@ -22,17 +22,31 @@ export default function SubscriptionForm({ onSave, onCancel, editingSub }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const sub = {
-      id: editingSub ? editingSub.id : uuidv4(),
-      name: formData.name,
-      price: parseFloat(formData.price),
-      frequency: formData.frequency,
-      category: formData.category.trim() || 'Otros',
-      billingDate: new Date(formData.billingDate).toISOString().split('T')[0]
-    };
-    onSave(sub);
-    if (!editingSub) {
-      setFormData({ name: '', price: '', frequency: 'monthly', category: '', billingDate: '' });
+    
+    // Validación básica de fecha
+    if (!formData.billingDate) {
+      alert('Por favor, selecciona una fecha de cobro.');
+      return;
+    }
+
+    try {
+      const sub = {
+        id: editingSub ? editingSub.id : uuidv4(),
+        name: formData.name.trim(),
+        price: parseFloat(formData.price),
+        frequency: formData.frequency,
+        category: formData.category.trim() || 'Otros',
+        billingDate: new Date(formData.billingDate).toISOString().split('T')[0]
+      };
+      
+      onSave(sub);
+      
+      if (!editingSub) {
+        setFormData({ name: '', price: '', frequency: 'monthly', category: '', billingDate: '' });
+      }
+    } catch (err) {
+      console.error('Error saving subscription:', err);
+      alert('Error al guardar la suscripción. Revisa los datos.');
     }
   };
 

@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard';
 import SubscriptionForm from './components/SubscriptionForm';
 import AlertsPanel from './components/AlertsPanel';
 import SubscriptionList from './components/SubscriptionList';
+import Toast from './components/Toast';
 
 export default function App() {
   const [subscriptions, setSubscriptions] = useState(() => {
@@ -12,6 +13,13 @@ export default function App() {
   });
   
   const [editingSub, setEditingSub] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   // Guardar en LocalStorage cada vez que cambien las suscripciones
   useEffect(() => {
@@ -36,10 +44,14 @@ export default function App() {
         return s;
       }));
       setEditingSub(null);
+      showNotification('Suscripción actualizada correctamente');
     } else {
       // Nueva suscripción
       setSubscriptions(subs => [...subs, { ...sub, priceHistory: [] }]);
+      showNotification('Suscripción añadida correctamente');
     }
+    // Cerrar sidebar en móvil al guardar
+    setIsSidebarOpen(false);
   };
 
   const handleEdit = (sub) => {
@@ -50,27 +62,40 @@ export default function App() {
     if (window.confirm('¿Seguro que quieres eliminar esta suscripción?')) {
       setSubscriptions(subs => subs.filter(s => s.id !== id));
       if (editingSub?.id === id) setEditingSub(null);
+      showNotification('Suscripción eliminada', 'info');
     }
   };
 
   return (
-    <div className="app-container animate-fade-in">
+    <div className={`app-container animate-fade-in ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      {/* Botón menú móvil */}
+      <button 
+        className="mobile-toggle"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        aria-label="Toggle menu"
+      >
+        <span className="hamburger"></span>
+      </button>
+
       {/* Barra lateral / Columna izquierda: Agregar/Editar y Lista */}
-      <div className="sidebar">
-        <h1 className="title" style={{ 
-            color: 'var(--text-main)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px'
-          }}>
-          <span style={{ 
-            background: 'linear-gradient(135deg, var(--accent-orange), var(--accent-purple))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>Suscrip</span>ciónes
-        </h1>
-        <div className="text-muted" style={{ marginBottom: '32px', fontSize: '0.9rem' }}>
-          Gestión inteligente de suscripciones y ahorro.
+      <aside className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
+        <div className="sidebar-header">
+           <h1 className="title" style={{ 
+               color: 'var(--text-main)', 
+               display: 'flex', 
+               alignItems: 'center', 
+               gap: '8px'
+             }}>
+             <span style={{ 
+               background: 'linear-gradient(135deg, var(--accent-orange), var(--accent-purple))',
+               WebkitBackgroundClip: 'text',
+               WebkitTextFillColor: 'transparent',
+               letterSpacing: '1px'
+             }}>Mis</span>Suscripciones
+           </h1>
+           <div className="text-muted" style={{ marginBottom: '32px', fontSize: '0.85rem', letterSpacing: '0.5px' }}>
+             Control inteligente de gastos recurrentes.
+           </div>
         </div>
         
         <SubscriptionForm 
@@ -84,17 +109,19 @@ export default function App() {
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
-      </div>
+      </aside>
 
       {/* Contenido Principal / Columna derecha: Dashboard y Alertas */}
       <div className="main-content">
         <header style={{ marginBottom: '32px' }}>
-          <h2 className="title-lg">Dashboard Financiero</h2>
+          <h2 className="title-lg" style={{ letterSpacing: '1px', fontWeight: 700 }}>Dashboard Financiero</h2>
         </header>
 
         <Dashboard subscriptions={subscriptions} />
         <AlertsPanel subscriptions={subscriptions} />
       </div>
+
+      <Toast notification={notification} />
     </div>
   );
 }

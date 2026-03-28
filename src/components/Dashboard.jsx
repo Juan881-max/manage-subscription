@@ -70,7 +70,7 @@ export default function Dashboard({ subscriptions }) {
 
       <div className="dashboard-grid" style={{ marginBottom: 0 }}>
         <div className="glass-panel">
-          <h2 className="title-md">Distribución por Categoría</h2>
+          <h2 className="title-md">Distribución del Capital</h2>
           {categoryData.length > 0 ? (
             <div style={{ height: 300, width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -99,14 +99,17 @@ export default function Dashboard({ subscriptions }) {
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="flex items-center justify-center text-muted" style={{ height: 200 }}>
-              No hay datos para mostrar
+            <div className="flex-col items-center justify-center text-muted" style={{ height: 260, opacity: 0.5 }}>
+              <PieChart width={160} height={160}>
+                <Pie data={[{value: 100}]} cx="50%" cy="50%" innerRadius={50} outerRadius={60} fill="var(--border-color)" dataKey="value" stroke="none" isAnimationActive={false} />
+              </PieChart>
+              <div style={{ marginTop: '-40px' }}>Añade una suscripción para ver el desglose</div>
             </div>
           )}
         </div>
 
         <div className="glass-panel flex-col">
-          <h2 className="title-md">Top Gastos</h2>
+          <h2 className="title-md">Impacto por Suscripción</h2>
           {topExpenses.length > 0 ? (
             <div className="flex-col gap-4">
               {topExpenses.map((sub, idx) => (
@@ -125,8 +128,9 @@ export default function Dashboard({ subscriptions }) {
               ))}
             </div>
           ) : (
-            <div className="flex items-center justify-center text-muted h-full">
-              No hay suscripciones registradas
+            <div className="flex-col items-center justify-center text-muted h-full" style={{ padding: '40px 0', opacity: 0.5 }}>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>📊</div>
+              <p>Tus gastos más altos aparecerán aquí</p>
             </div>
           )}
         </div>
